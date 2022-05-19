@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
-import { Text, TextInput, TouchableOpacity, View, StyleSheet } from 'react-native'
+import { Text, TextInput, TouchableOpacity, View, StyleSheet, Image } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 const Registration = ({ navigation }) => {
-    const [fullName, setFullName] = useState('')
+    const [username, setUsername] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
@@ -17,12 +17,14 @@ const Registration = ({ navigation }) => {
     return (
         <View style={styles.container}>
             <KeyboardAwareScrollView style={{ flex: 1, width: '100%' }} keyboardShouldPersistTaps="always">
+                <Image source={require('../../assets/logo-vertical.png')} style={styles.logo} />
+
                 <TextInput
                     style={styles.input}
-                    placeholder="Full Name"
+                    placeholder="Username"
                     placeholderTextColor="#aaaaaa"
-                    onChangeText={(text) => setFullName(text)}
-                    value={fullName}
+                    onChangeText={(text) => setUsername(text)}
+                    value={username}
                     underlineColorAndroid="transparent"
                     autoCapitalize="none"
                 />
@@ -75,14 +77,16 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
+        backgroundColor: '#6649B6',
     },
-    title: {},
+
     logo: {
         flex: 1,
         height: 120,
         width: 90,
         alignSelf: 'center',
         margin: 30,
+        resizeMode: 'contain',
     },
     input: {
         height: 48,
@@ -96,7 +100,7 @@ const styles = StyleSheet.create({
         paddingLeft: 16,
     },
     button: {
-        backgroundColor: '#788eec',
+        backgroundColor: '#F4D35E',
         marginLeft: 30,
         marginRight: 30,
         marginTop: 20,
@@ -106,7 +110,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     buttonTitle: {
-        color: 'white',
+        color: '#6649B6',
         fontSize: 16,
         fontWeight: 'bold',
     },
@@ -117,10 +121,10 @@ const styles = StyleSheet.create({
     },
     footerText: {
         fontSize: 16,
-        color: '#2e2e2d',
+        color: '#ffffff',
     },
     footerLink: {
-        color: '#788eec',
+        color: '#F4D35E',
         fontWeight: 'bold',
         fontSize: 16,
     },
