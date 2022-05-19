@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text } from 'react-native-web'
+import { Text } from 'react-native'
 import { View, StyleSheet } from 'react-native'
 
 const Home = () => {
@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#6649B6',
     },
     text: {
-        fontSize: '40px',
+        fontSize: 40,
     },
 })
 

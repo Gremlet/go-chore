@@ -40,7 +40,7 @@ const Login = ({ navigation }) => {
                     <Text style={styles.footerText}>
                         Don't have an account?{' '}
                         <Text onPress={onFooterLinkPress} style={styles.footerLink}>
-                            Sign up
+                            Sign in
                         </Text>
                     </Text>
                 </View>

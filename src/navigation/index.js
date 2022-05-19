@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
-import Splash from '../screens/Splash'
+import { auth } from '../firebase/config'
 import Login from '../screens/Login'
 import Registration from '../screens/Registration'
 import Home from '../screens/Home'
@@ -9,14 +9,21 @@ import Home from '../screens/Home'
 const Stack = createStackNavigator()
 
 const Navigation = () => {
-    const [loading, setLoading] = useState(true)
-    const [user, setUser] = useState(null)
+    const [signedIn, setSignedIn] = useState(false)
+
+    auth.onAuthStateChanged((user) => {
+        if (user) {
+            setSignedIn(true)
+        } else {
+            setSignedIn(false)
+        }
+    })
 
     return (
         <NavigationContainer>
             <Stack.Navigator>
-                {user ? (
-                    <Stack.Screen name="Home">{(props) => <Home {...props} extraData={user} />}</Stack.Screen>
+                {signedIn ? (
+                    <Stack.Screen name="Home" component={Home} />
                 ) : (
                     <>
                         <Stack.Screen name="Login" component={Login} />

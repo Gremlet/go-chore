@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Text, TextInput, TouchableOpacity, View, StyleSheet, Image } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
 
 const Registration = ({ navigation }) => {
     const [username, setUsername] = useState('')
@@ -12,7 +13,26 @@ const Registration = ({ navigation }) => {
         navigation.navigate('Login')
     }
 
-    const onRegisterPress = () => {}
+    const onRegisterPress = () => {
+        if (password !== confirmPassword) {
+            alert('Passwords do not match')
+            return
+        }
+
+        const auth = getAuth()
+        createUserWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                // Signed in
+                const user = userCredential.user
+                console.log(user)
+                // ...
+            })
+            .catch((error) => {
+                const errorCode = error.code
+                const errorMessage = error.message
+                console.log('error', errorCode, errorMessage)
+            })
+    }
 
     return (
         <View style={styles.container}>
