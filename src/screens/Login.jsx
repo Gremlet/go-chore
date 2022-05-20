@@ -1,16 +1,34 @@
 import React, { useState } from 'react'
-import { Text, TextInput, TouchableOpacity, View, StyleSheet, Image } from 'react-native'
+import { Text, TextInput, TouchableOpacity, View, Image } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
+
+import styles from '../styles/loginStyles'
 
 const Login = ({ navigation }) => {
-    const [username, setUsername] = useState('')
+    const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [error, setError] = useState(false)
+
+    const auth = getAuth()
 
     const onFooterLinkPress = () => {
         navigation.navigate('Registration')
     }
 
-    const onLoginPress = () => {}
+    const onLoginPress = () => {
+        signInWithEmailAndPassword(auth, email, password)
+            .then((result) => {
+                console.log('result', result)
+            })
+
+            .catch((error) => {
+                const errorCode = error.code
+                const errorMessage = error.message
+                console.log('error', errorCode, errorMessage)
+                setError(true)
+            })
+    }
 
     return (
         <View style={styles.container}>
@@ -20,8 +38,8 @@ const Login = ({ navigation }) => {
                     style={styles.input}
                     placeholder="E-mail"
                     placeholderTextColor="#aaaaaa"
-                    onChangeText={(text) => setUsername(text)}
-                    value={username}
+                    onChangeText={(text) => setEmail(text)}
+                    value={email}
                     autoCapitalize="none"
                 />
                 <TextInput
@@ -33,6 +51,7 @@ const Login = ({ navigation }) => {
                     value={password}
                     autoCapitalize="none"
                 />
+                {error && <Text style={styles.errorText}>Invalid email or password!</Text>}
                 <TouchableOpacity style={styles.button} onPress={() => onLoginPress()}>
                     <Text style={styles.buttonTitle}>Log in</Text>
                 </TouchableOpacity>
@@ -40,7 +59,7 @@ const Login = ({ navigation }) => {
                     <Text style={styles.footerText}>
                         Don't have an account?{' '}
                         <Text onPress={onFooterLinkPress} style={styles.footerLink}>
-                            Sign in
+                            Register
                         </Text>
                     </Text>
                 </View>
@@ -48,61 +67,5 @@ const Login = ({ navigation }) => {
         </View>
     )
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: 'center',
-        backgroundColor: '#6649B6',
-    },
-    logo: {
-        flex: 1,
-        height: 120,
-        width: 90,
-        alignSelf: 'center',
-        margin: 30,
-        resizeMode: 'contain',
-    },
-    input: {
-        height: 48,
-        borderRadius: 5,
-        overflow: 'hidden',
-        backgroundColor: 'white',
-        marginTop: 10,
-        marginBottom: 10,
-        marginLeft: 30,
-        marginRight: 30,
-        paddingLeft: 16,
-    },
-    button: {
-        backgroundColor: '#F4D35E',
-        marginLeft: 30,
-        marginRight: 30,
-        marginTop: 20,
-        height: 48,
-        borderRadius: 5,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    buttonTitle: {
-        color: '#6649B6',
-        fontSize: 16,
-        fontWeight: 'bold',
-    },
-    footerView: {
-        flex: 1,
-        alignItems: 'center',
-        marginTop: 20,
-    },
-    footerText: {
-        fontSize: 16,
-        color: '#ffffff',
-    },
-    footerLink: {
-        color: '#F4D35E',
-        fontWeight: 'bold',
-        fontSize: 16,
-    },
-})
 
 export default Login

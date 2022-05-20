@@ -1,13 +1,17 @@
 import React, { useState } from 'react'
-import { Text, TextInput, TouchableOpacity, View, StyleSheet, Image } from 'react-native'
+import { Text, TextInput, TouchableOpacity, View, Image } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
+import { getAuth, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
+import styles from '../styles/loginStyles'
 
 const Registration = ({ navigation }) => {
     const [username, setUsername] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
+    const [error, setError] = useState(false)
+
+    const auth = getAuth()
 
     const onFooterLinkPress = () => {
         navigation.navigate('Login')
@@ -19,18 +23,18 @@ const Registration = ({ navigation }) => {
             return
         }
 
-        const auth = getAuth()
         createUserWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
-                // Signed in
-                const user = userCredential.user
-                console.log(user)
-                // ...
+            .then((result) => {
+                updateProfile(auth.currentUser, { displayName: username }).catch((error) => {
+                    console.log('error', error)
+                })
             })
+
             .catch((error) => {
                 const errorCode = error.code
                 const errorMessage = error.message
                 console.log('error', errorCode, errorMessage)
+                setError(true)
             })
     }
 
@@ -77,6 +81,8 @@ const Registration = ({ navigation }) => {
                     underlineColorAndroid="transparent"
                     autoCapitalize="none"
                 />
+                {error && <Text style={styles.errorText}>Oops! Please check your email address!</Text>}
+
                 <TouchableOpacity style={styles.button} onPress={() => onRegisterPress()}>
                     <Text style={styles.buttonTitle}>Create account</Text>
                 </TouchableOpacity>
@@ -92,62 +98,5 @@ const Registration = ({ navigation }) => {
         </View>
     )
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: 'center',
-        backgroundColor: '#6649B6',
-    },
-
-    logo: {
-        flex: 1,
-        height: 120,
-        width: 90,
-        alignSelf: 'center',
-        margin: 30,
-        resizeMode: 'contain',
-    },
-    input: {
-        height: 48,
-        borderRadius: 5,
-        overflow: 'hidden',
-        backgroundColor: 'white',
-        marginTop: 10,
-        marginBottom: 10,
-        marginLeft: 30,
-        marginRight: 30,
-        paddingLeft: 16,
-    },
-    button: {
-        backgroundColor: '#F4D35E',
-        marginLeft: 30,
-        marginRight: 30,
-        marginTop: 20,
-        height: 48,
-        borderRadius: 5,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    buttonTitle: {
-        color: '#6649B6',
-        fontSize: 16,
-        fontWeight: 'bold',
-    },
-    footerView: {
-        flex: 1,
-        alignItems: 'center',
-        marginTop: 20,
-    },
-    footerText: {
-        fontSize: 16,
-        color: '#ffffff',
-    },
-    footerLink: {
-        color: '#F4D35E',
-        fontWeight: 'bold',
-        fontSize: 16,
-    },
-})
 
 export default Registration

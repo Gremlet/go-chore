@@ -1,11 +1,15 @@
 import React from 'react'
-import { Text } from 'react-native'
-import { View, StyleSheet } from 'react-native'
+import { Text, TouchableOpacity, View, StyleSheet } from 'react-native'
+import { getAuth } from 'firebase/auth'
 
 const Home = () => {
+    const auth = getAuth()
     return (
         <View style={styles.container}>
-            <Text style={styles.text}>HOME!</Text>
+            <Text style={styles.text}>Welcome {auth.currentUser.displayName}</Text>
+            <TouchableOpacity style={styles.button} onPress={() => auth.signOut()}>
+                <Text style={styles.buttonTitle}>Log out</Text>
+            </TouchableOpacity>
         </View>
     )
 }
@@ -19,6 +23,13 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: 40,
+    },
+    button: {
+        backgroundColor: '#F4D35E',
+        height: 48,
+        borderRadius: 5,
+        alignItems: 'center',
+        justifyContent: 'center',
     },
 })
 
