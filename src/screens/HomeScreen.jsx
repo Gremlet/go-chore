@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
     },
     button: {
         backgroundColor: '#D81E5B',
-        height: 32,
+        height: 40,
         borderRadius: 5,
         alignItems: 'center',
         justifyContent: 'center',
