@@ -12,6 +12,7 @@
   "dependencies": {
     "@expo-google-fonts/patrick-hand": "^0.2.2",
     "@react-native-community/masked-view": "^0.1.11",
+    "@react-navigation/bottom-tabs": "^6.3.1",
     "@react-navigation/native": "^6.0.10",
     "@react-navigation/stack": "^6.2.1",
     "base-64": "^1.0.0",

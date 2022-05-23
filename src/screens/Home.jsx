@@ -1,36 +1,17 @@
 import React from 'react'
-import { Text, TouchableOpacity, View, StyleSheet } from 'react-native'
-import { getAuth } from 'firebase/auth'
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import Splash from './Splash'
+import HomeScreen from './HomeScreen'
 
 const Home = () => {
-    const auth = getAuth()
+    const Tab = createBottomTabNavigator()
+
     return (
-        <View style={styles.container}>
-            <Text style={styles.text}>Welcome {auth.currentUser.displayName}</Text>
-            <TouchableOpacity style={styles.button} onPress={() => auth.signOut()}>
-                <Text style={styles.buttonTitle}>Log out</Text>
-            </TouchableOpacity>
-        </View>
+        <Tab.Navigator screenOptions={{ headerShown: false }}>
+            <Tab.Screen name="HomeScreen" component={HomeScreen} />
+            <Tab.Screen name="Splash" component={Splash} />
+        </Tab.Navigator>
     )
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#6649B6',
-    },
-    text: {
-        fontSize: 40,
-    },
-    button: {
-        backgroundColor: '#F4D35E',
-        height: 48,
-        borderRadius: 5,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-})
 
 export default Home

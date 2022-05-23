@@ -21,7 +21,7 @@ const Navigation = () => {
 
     return (
         <NavigationContainer>
-            <Stack.Navigator>
+            <Stack.Navigator screenOptions={{ headerShown: false }}>
                 {signedIn ? (
                     <Stack.Screen name="Home" component={Home} />
                 ) : (
