@@ -1,7 +1,6 @@
 import React from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import { FontAwesomeIcon } from '../utils/fontAwesomeUtils'
-import { faHouse } from '@fortawesome/free-solid-svg-icons'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import Splash from './Splash'
 import HomeScreen from './HomeScreen'
 
@@ -14,7 +13,7 @@ const Home = () => {
                 name="HomeScreen"
                 component={HomeScreen}
                 options={{
-                    tabBarIcon: ({ color, size }) => <FontAwesomeIcon icon={faHouse} color={color} size={size} />,
+                    tabBarIcon: ({ color, size }) => <MaterialCommunityIcons name="home" color={color} size={size} />,
                 }}
             />
             <Tab.Screen name="Splash" component={Splash} />
