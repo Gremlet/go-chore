@@ -34,6 +34,25 @@ const Registration = ({ navigation }) => {
             .then((result) => {
                 return setDoc(doc(db, 'users', auth.currentUser.uid), {
                     username: username,
+                    Health: 100,
+                    Experience: 0,
+                    Tasks: {
+                        Daily: [],
+                        Weekly: [],
+                        Monthly: [],
+                        OneOff: [],
+                    },
+                    Achievements: {
+                        Paper: false,
+                        Wood: false,
+                        Stone: false,
+                        Steel: false,
+                        Bronze: false,
+                        Silver: false,
+                        Gold: false,
+                        Platinum: false,
+                        Diamond: false,
+                    },
                 })
             })
 

@@ -4,6 +4,8 @@ import { getAuth } from 'firebase/auth'
 
 import { getFirestore, doc, getDoc } from 'firebase/firestore'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import Experience from '../components/Experience'
+import Health from '../components/Health'
 
 const Home = () => {
     const auth = getAuth()
@@ -37,6 +39,8 @@ const Home = () => {
                     <MaterialCommunityIcons name="logout" color={'#F4D35E'} size={20} />
                 </TouchableOpacity>
             </View>
+            <Experience />
+            <Health />
         </View>
     )
 }
@@ -48,7 +52,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#6649B6',
     },
     top: {
-        flex: 1,
         width: '100%',
         flexDirection: 'row',
         justifyContent: 'space-between',
