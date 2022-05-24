@@ -4,7 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack'
 import { auth } from '../firebase/config'
 import Login from '../screens/Login'
 import Registration from '../screens/Registration'
-import Home from '../screens/Home'
+import Landing from '../screens/Landing'
 
 const Navigation = () => {
     const Stack = createStackNavigator()
@@ -23,7 +23,7 @@ const Navigation = () => {
         <NavigationContainer>
             <Stack.Navigator screenOptions={{ headerShown: false }}>
                 {signedIn ? (
-                    <Stack.Screen name="Home" component={Home} />
+                    <Stack.Screen name="Landing" component={Landing} />
                 ) : (
                     <>
                         <Stack.Screen name="Login" component={Login} />
