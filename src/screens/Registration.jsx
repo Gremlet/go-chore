@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Text, TextInput, TouchableOpacity, View, Image } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { getAuth, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
+import { getFirestore, doc, setDoc } from 'firebase/firestore'
 import styles from '../styles/loginStyles'
 
 const Registration = ({ navigation }) => {
@@ -12,12 +13,13 @@ const Registration = ({ navigation }) => {
     const [error, setError] = useState(false)
 
     const auth = getAuth()
+    const db = getFirestore()
 
     const onFooterLinkPress = () => {
         navigation.navigate('Login')
     }
 
-    const onRegisterPress = () => {
+    const onRegisterPress = async () => {
         if (password !== confirmPassword) {
             alert('Passwords do not match')
             return
@@ -25,8 +27,13 @@ const Registration = ({ navigation }) => {
 
         createUserWithEmailAndPassword(auth, email, password)
             .then((result) => {
-                updateProfile(auth.currentUser, { displayName: username }).catch((error) => {
+                return updateProfile(auth.currentUser, { displayName: username }).catch((error) => {
                     console.log('error', error)
+                })
+            })
+            .then((result) => {
+                return setDoc(doc(db, 'users', auth.currentUser.uid), {
+                    username: username,
                 })
             })
 

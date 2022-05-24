@@ -6,9 +6,9 @@ import Login from '../screens/Login'
 import Registration from '../screens/Registration'
 import Home from '../screens/Home'
 
-const Stack = createStackNavigator()
-
 const Navigation = () => {
+    const Stack = createStackNavigator()
+
     const [signedIn, setSignedIn] = useState(false)
 
     auth.onAuthStateChanged((user) => {
