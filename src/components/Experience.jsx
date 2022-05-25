@@ -12,7 +12,7 @@ const Experience = () => {
 
     useEffect(() => {
         getXp()
-    })
+    }, [])
 
     const getXp = async () => {
         const docRef = doc(db, 'users', auth.currentUser.uid)
@@ -28,7 +28,7 @@ const Experience = () => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.text}>Experience - {xp}</Text>
+            <Text style={styles.text}> ⭐️ Experience - {xp}</Text>
             <ProgressBar progress={xp !== 0 ? xp / 100 : 0} color={'#F4D35E'} style={styles.progressBar} />
         </View>
     )

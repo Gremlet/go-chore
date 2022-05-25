@@ -28,7 +28,7 @@ const Health = () => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.text}>Health - {health}</Text>
+            <Text style={styles.text}> ❤️ Health - {health}</Text>
             <ProgressBar progress={health / 100} color={'#F4D35E'} style={styles.progressBar} />
         </View>
     )

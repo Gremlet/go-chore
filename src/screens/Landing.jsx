@@ -3,6 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import Tasks from './Tasks'
 import Home from './Home'
+import Habits from './Habits'
 
 const Landing = () => {
     const Tab = createBottomTabNavigator()
@@ -22,6 +23,15 @@ const Landing = () => {
                 options={{
                     tabBarIcon: ({ color, size }) => (
                         <MaterialCommunityIcons name="check-bold" color={color} size={size} />
+                    ),
+                }}
+            />
+            <Tab.Screen
+                name="Habits"
+                component={Habits}
+                options={{
+                    tabBarIcon: ({ color, size }) => (
+                        <MaterialCommunityIcons name="calendar-month" color={color} size={size} />
                     ),
                 }}
             />
