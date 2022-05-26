@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { Text } from 'react-native'
-import { View, StyleSheet } from 'react-native'
+import { View, StyleSheet, ScrollView } from 'react-native'
 import { FAB, Portal, Dialog, Button, TextInput, Paragraph, RadioButton, Checkbox } from 'react-native-paper'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import DateTimePickerModal from 'react-native-modal-datetime-picker'
 import { getFirestore, doc, arrayUnion, setDoc, getDoc, Timestamp } from 'firebase/firestore'
 import { getAuth } from 'firebase/auth'
+import TaskList from '../components/TaskList'
 
 const Tasks = () => {
     const db = getFirestore()
@@ -96,26 +97,7 @@ const Tasks = () => {
                 onCancel={hideDatePicker}
             />
 
-            {taskArray.map((task) => (
-                <View style={styles.list}>
-                    <Text style={styles.listTitle}>
-                        {task.text}
-                        <MaterialCommunityIcons name="clipboard-check" size={30} color="#F0544F" />
-                    </Text>
-                    <Text style={styles.listText}>
-                        Date added: {new Date(task.dateAdded.seconds * 1000).toDateString()}{' '}
-                    </Text>
-                    <Text style={styles.listText}>
-                        Deadline: {new Date(task.deadline.seconds * 1000).toDateString()}{' '}
-                    </Text>
-                    <Text style={styles.listText}>
-                        Difficulty: {task.difficulty === 1 && 'Easy'}
-                        {task.difficulty === 2 && 'Medium'}
-                        {task.difficulty === 3 && 'Hard'}
-                    </Text>
-                    <Button>Done? Click here!</Button>
-                </View>
-            ))}
+            <TaskList taskArray={taskArray} />
 
             <FAB style={styles.fab} small icon="plus" onPress={showDialog} />
         </View>
@@ -147,23 +129,6 @@ const styles = StyleSheet.create({
         right: 0,
         bottom: 0,
     },
-    list: {
-        flexShrink: 1,
-        width: '90%',
-        borderRadius: 10,
-        backgroundColor: '#16F4D0',
-        padding: 10,
-        marginVertical: 10,
-    },
-    listTitle: {
-        fontSize: 20,
-        fontFamily: 'PatrickHand_400Regular',
-    },
-    listText: {
-        fontFamily: 'PatrickHand_400Regular',
-        fontSize: 15,
-    },
-    check: {},
 })
 
 export default Tasks
