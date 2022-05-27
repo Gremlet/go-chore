@@ -116,13 +116,13 @@ const styles = StyleSheet.create({
         fontSize: 20,
         marginTop: 40,
         paddingHorizontal: 20,
-        fontFamily: 'PatrickHand_400Regular',
+        fontFamily: 'Poppins_400Regular',
         color: '#F4D35E',
     },
     tasksHeader: {
         marginTop: 20,
         fontSize: 30,
-        fontFamily: 'PatrickHand_400Regular',
+        fontFamily: 'Poppins_400Regular',
         color: '#F4D35E',
     },
     fab: {

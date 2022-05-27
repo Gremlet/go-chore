@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: 20,
-        fontFamily: 'PatrickHand_400Regular',
+        fontFamily: 'Poppins_400Regular',
         color: '#F4D35E',
     },
     button: {

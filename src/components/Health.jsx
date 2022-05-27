@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
     },
     text: {
         padding: 5,
-        fontFamily: 'PatrickHand_400Regular',
+        fontFamily: 'Poppins_400Regular',
         color: '#16F4D0',
     },
     progressBar: {},

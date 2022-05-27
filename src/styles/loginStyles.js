@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
         color: '#6649B6',
         fontSize: 16,
         fontWeight: 'bold',
-        fontFamily: 'PatrickHand_400Regular',
+        fontFamily: 'Poppins_400Regular',
     },
     footerView: {
         flex: 1,
@@ -49,19 +49,19 @@ const styles = StyleSheet.create({
     footerText: {
         fontSize: 16,
         color: '#ffffff',
-        fontFamily: 'PatrickHand_400Regular',
+        fontFamily: 'Poppins_400Regular',
     },
     footerLink: {
         color: '#F4D35E',
         fontWeight: 'bold',
         fontSize: 16,
-        fontFamily: 'PatrickHand_400Regular',
+        fontFamily: 'Poppins_400Regular',
     },
     errorText: {
         fontSize: 20,
         color: 'red',
         textAlign: 'center',
-        fontFamily: 'PatrickHand_400Regular',
+        fontFamily: 'Poppins_400Regular',
     },
 })
 

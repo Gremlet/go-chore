@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { View, StyleSheet, Text, FlatList } from 'react-native'
 import { MaterialCommunityIcons } from 'react-native-vector-icons'
-import { Button } from 'react-native-paper'
+import { Button, Dialog, Portal } from 'react-native-paper'
+import ConfettiCannon from 'react-native-confetti-cannon'
 import { getFirestore, doc, updateDoc, setDoc, getDoc, increment } from 'firebase/firestore'
 import { getAuth } from 'firebase/auth'
 
@@ -9,7 +10,11 @@ const TaskList = ({ taskArray, getTasks }) => {
     const auth = getAuth()
     const db = getFirestore()
 
+    const [visible, setVisible] = useState(false)
     const [currentHealth, setCurrentHealth] = useState(0)
+    const [XP, setXP] = useState(0)
+    const [healthPoints, setHealthPoints] = useState(0)
+    const [confetti, setConfetti] = useState(false)
 
     useEffect(() => {
         const healthRef = doc(db, 'users', auth.currentUser.uid)
@@ -18,11 +23,18 @@ const TaskList = ({ taskArray, getTasks }) => {
         })
     }, [onButtonPress])
 
-    const onButtonPress = async (taskId, taskDifficulty) => {
-        console.log('This task id is', taskId, 'and is level', taskDifficulty)
+    const showDialog = () => setVisible(true)
+    const hideDialog = () => {
+        setVisible(false)
+        setConfetti(false)
+    }
 
-        const XP = taskDifficulty * 10
-        const healthPoints = taskDifficulty
+    const onButtonPress = async (taskId, taskDifficulty) => {
+        showDialog()
+        setConfetti(true)
+
+        setXP(taskDifficulty * 10)
+        setHealthPoints(taskDifficulty)
 
         let newArr = taskArray.map((item) => {
             if (item.id === taskId) {
@@ -57,38 +69,52 @@ const TaskList = ({ taskArray, getTasks }) => {
     }
 
     return (
-        <FlatList
-            style={styles.flat}
-            data={taskArray}
-            renderItem={({ item }) =>
-                !item.done && (
-                    <View style={styles.list}>
-                        <Text style={styles.listTitle}>
-                            {item.text}
-                            <MaterialCommunityIcons name="clipboard-check" size={30} color="#F0544F" />
+        <>
+            <FlatList
+                style={styles.flat}
+                data={taskArray}
+                renderItem={({ item }) =>
+                    !item.done && (
+                        <View style={styles.list}>
+                            <Text style={styles.listTitle}>
+                                {item.text}
+                                <MaterialCommunityIcons name="clipboard-check" size={30} color="#F0544F" />
+                            </Text>
+                            <Text style={styles.listText}>
+                                Date added: {new Date(item.dateAdded.seconds * 1000).toDateString()}{' '}
+                            </Text>
+                            <Text style={styles.listText}>
+                                Deadline: {new Date(item.deadline.seconds * 1000).toDateString()}{' '}
+                            </Text>
+                            <Text style={styles.listText}>
+                                Difficulty: {item.difficulty === 1 && 'Easy'}
+                                {item.difficulty === 2 && 'Medium'}
+                                {item.difficulty === 3 && 'Hard'}
+                            </Text>
+                            <Button
+                                onPress={() => {
+                                    onButtonPress(item.id, item.difficulty)
+                                }}
+                            >
+                                Done? Click here!
+                            </Button>
+                        </View>
+                    )
+                }
+            />
+            <Portal>
+                <Dialog visible={visible} onDismiss={hideDialog} style={styles.dialog}>
+                    <Dialog.Title style={styles.dialogTitle}>Nice job! 🏆</Dialog.Title>
+                    <Dialog.Content>
+                        <Text style={styles.dialogText}>Yay, you did it!</Text>
+                        <Text style={styles.dialogText}>
+                            You gained {XP} xp {currentHealth !== 100 ? `and ${healthPoints} health` : ''}
                         </Text>
-                        <Text style={styles.listText}>
-                            Date added: {new Date(item.dateAdded.seconds * 1000).toDateString()}{' '}
-                        </Text>
-                        <Text style={styles.listText}>
-                            Deadline: {new Date(item.deadline.seconds * 1000).toDateString()}{' '}
-                        </Text>
-                        <Text style={styles.listText}>
-                            Difficulty: {item.difficulty === 1 && 'Easy'}
-                            {item.difficulty === 2 && 'Medium'}
-                            {item.difficulty === 3 && 'Hard'}
-                        </Text>
-                        <Button
-                            onPress={() => {
-                                onButtonPress(item.id, item.difficulty)
-                            }}
-                        >
-                            Done? Click here!
-                        </Button>
-                    </View>
-                )
-            }
-        />
+                        {confetti && <ConfettiCannon count={100} origin={{ x: 0, y: 0 }} explosionSpeed={150} />}
+                    </Dialog.Content>
+                </Dialog>
+            </Portal>
+        </>
     )
 }
 
@@ -105,11 +131,20 @@ const styles = StyleSheet.create({
     },
     listTitle: {
         fontSize: 20,
-        fontFamily: 'PatrickHand_400Regular',
+        fontFamily: 'Poppins_400Regular',
     },
     listText: {
-        fontFamily: 'PatrickHand_400Regular',
+        fontFamily: 'Poppins_400Regular',
         fontSize: 15,
+    },
+    dialog: {
+        backgroundColor: '#F4D35E',
+    },
+    dialogTitle: {
+        fontFamily: 'Poppins_400Regular',
+    },
+    dialogText: {
+        fontFamily: 'Poppins_400Regular',
     },
 })
 
