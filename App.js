@@ -5,9 +5,8 @@ import { Text } from 'react-native'
 import { Provider as PaperProvider } from 'react-native-paper'
 import { useFonts, Poppins_400Regular } from '@expo-google-fonts/poppins'
 
-enableScreens()
-
 export default function App() {
+    enableScreens()
     let [fontsLoaded] = useFonts({ Poppins_400Regular })
 
     return !fontsLoaded ? (

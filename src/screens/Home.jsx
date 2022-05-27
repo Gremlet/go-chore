@@ -7,6 +7,7 @@ import { FAB } from 'react-native-paper'
 import colors from '../styles/colours'
 import Experience from '../components/Experience'
 import Health from '../components/Health'
+import Achievements from '../components/Achievements'
 
 const Home = () => {
     const auth = getAuth()
@@ -57,6 +58,7 @@ const Home = () => {
             </View>
             <Experience xp={xp} />
             <Health health={health} />
+            <Achievements />
             <FAB style={styles.refreshFab} small icon="refresh" onPress={refreshProgress} />
             <FAB style={styles.signoutFab} small icon="logout" color={colors.orange} onPress={() => auth.signOut()} />
         </View>
