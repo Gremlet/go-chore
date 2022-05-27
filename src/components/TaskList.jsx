@@ -2,7 +2,7 @@ import React from 'react'
 import { View, StyleSheet, Text, FlatList } from 'react-native'
 import { MaterialCommunityIcons } from 'react-native-vector-icons'
 import { Button } from 'react-native-paper'
-import { getFirestore, doc, updateDoc, increment } from 'firebase/firestore'
+import { getFirestore, doc, updateDoc, setDoc, increment } from 'firebase/firestore'
 import { getAuth } from 'firebase/auth'
 
 const TaskList = ({ taskArray, getTasks }) => {
@@ -23,11 +23,15 @@ const TaskList = ({ taskArray, getTasks }) => {
         })
 
         const doneRef = doc(db, 'users', auth.currentUser.uid)
-        await updateDoc(doneRef, {
-            Tasks: {
-                OneOff: newArr,
+        await setDoc(
+            doneRef,
+            {
+                Tasks: {
+                    OneOff: newArr,
+                },
             },
-        })
+            { merge: true }
+        )
 
         await updateDoc(doneRef, {
             Experience: increment(XP),
