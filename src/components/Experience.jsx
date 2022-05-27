@@ -5,21 +5,7 @@ import { getAuth } from 'firebase/auth'
 
 import { ProgressBar } from 'react-native-paper'
 
-const Experience = () => {
-    const db = getFirestore()
-    const auth = getAuth()
-    const [xp, setXp] = useState(0)
-
-    useEffect(() => {
-        getXp()
-    }, [])
-
-    const getXp = async () => {
-        const docRef = doc(db, 'users', auth.currentUser.uid)
-        const docSnap = await getDoc(docRef)
-        setXp(docSnap.data().Experience)
-    }
-
+const Experience = ({ xp }) => {
     return (
         <View style={styles.container}>
             <Text style={styles.text}> ⭐️ Experience - {xp}</Text>

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { Text, TouchableOpacity, View, StyleSheet } from 'react-native'
 import { getAuth } from 'firebase/auth'
-
 import { getFirestore, doc, getDoc } from 'firebase/firestore'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import { FAB } from 'react-native-paper'
 import Experience from '../components/Experience'
 import Health from '../components/Health'
 
@@ -12,9 +12,13 @@ const Home = () => {
     const db = getFirestore()
 
     const [username, setUsername] = useState('')
+    const [xp, setXp] = useState(0)
+    const [health, setHealth] = useState(0)
 
     useEffect(() => {
         getUsername()
+        getXp()
+        getHealth()
     }, [])
 
     const getUsername = async () => {
@@ -22,6 +26,25 @@ const Home = () => {
         const docSnap = await getDoc(docRef)
 
         setUsername(docSnap.data().username)
+    }
+
+    const getXp = () => {
+        const xpRef = doc(db, 'users', auth.currentUser.uid)
+        getDoc(xpRef).then((docSnap) => {
+            setXp(docSnap.data().Experience)
+        })
+    }
+
+    const getHealth = () => {
+        const healthRef = doc(db, 'users', auth.currentUser.uid)
+        getDoc(healthRef).then((docSnap) => {
+            setHealth(docSnap.data().Health)
+        })
+    }
+
+    const refreshProgress = () => {
+        getXp()
+        getHealth()
     }
 
     return (
@@ -33,8 +56,9 @@ const Home = () => {
                     <MaterialCommunityIcons name="logout" color={'#F4D35E'} size={20} />
                 </TouchableOpacity>
             </View>
-            <Experience />
-            <Health />
+            <Experience xp={xp} />
+            <Health health={health} />
+            <FAB style={styles.fab} small icon="refresh" onPress={refreshProgress} />
         </View>
     )
 }
@@ -65,6 +89,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         padding: 8,
+    },
+    fab: {
+        position: 'absolute',
+        margin: 16,
+        right: 160,
+        bottom: 0,
     },
 })
 

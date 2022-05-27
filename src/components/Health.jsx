@@ -5,23 +5,7 @@ import { getAuth } from 'firebase/auth'
 
 import { ProgressBar } from 'react-native-paper'
 
-const Health = () => {
-    const db = getFirestore()
-    const auth = getAuth()
-    const [health, setHealth] = useState(0)
-    const [progressBarValue, setProgressBarValue] = useState(0)
-
-    useEffect(() => {
-        getHealth()
-    }, [])
-
-    const getHealth = async () => {
-        const docRef = doc(db, 'users', auth.currentUser.uid)
-        const docSnap = await getDoc(docRef)
-
-        setHealth(docSnap.data().Health)
-    }
-
+const Health = ({ health }) => {
     return (
         <View style={styles.container}>
             <Text style={styles.text}> ❤️ Health - {health}</Text>

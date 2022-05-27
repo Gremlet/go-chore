@@ -1,18 +1,28 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { View, StyleSheet, Text, FlatList } from 'react-native'
 import { MaterialCommunityIcons } from 'react-native-vector-icons'
 import { Button } from 'react-native-paper'
-import { getFirestore, doc, updateDoc, setDoc, increment } from 'firebase/firestore'
+import { getFirestore, doc, updateDoc, setDoc, getDoc, increment } from 'firebase/firestore'
 import { getAuth } from 'firebase/auth'
 
 const TaskList = ({ taskArray, getTasks }) => {
     const auth = getAuth()
     const db = getFirestore()
 
+    const [currentHealth, setCurrentHealth] = useState(0)
+
+    useEffect(() => {
+        const healthRef = doc(db, 'users', auth.currentUser.uid)
+        getDoc(healthRef).then((docSnap) => {
+            setCurrentHealth(docSnap.data().Health)
+        })
+    }, [onButtonPress])
+
     const onButtonPress = async (taskId, taskDifficulty) => {
         console.log('This task id is', taskId, 'and is level', taskDifficulty)
 
         const XP = taskDifficulty * 10
+        const healthPoints = taskDifficulty
 
         let newArr = taskArray.map((item) => {
             if (item.id === taskId) {
@@ -36,6 +46,12 @@ const TaskList = ({ taskArray, getTasks }) => {
         await updateDoc(doneRef, {
             Experience: increment(XP),
         })
+
+        currentHealth !== 100
+            ? await updateDoc(doneRef, {
+                  Health: increment(healthPoints),
+              })
+            : null
 
         getTasks()
     }
