@@ -2,31 +2,72 @@ import React from 'react'
 import { View, StyleSheet, Text, FlatList } from 'react-native'
 import { MaterialCommunityIcons } from 'react-native-vector-icons'
 import { Button } from 'react-native-paper'
-const TaskList = ({ taskArray }) => {
+import { getFirestore, doc, updateDoc, increment } from 'firebase/firestore'
+import { getAuth } from 'firebase/auth'
+
+const TaskList = ({ taskArray, getTasks }) => {
+    const auth = getAuth()
+    const db = getFirestore()
+
+    const onButtonPress = async (taskId, taskDifficulty) => {
+        console.log('This task id is', taskId, 'and is level', taskDifficulty)
+
+        const XP = taskDifficulty * 10
+
+        let newArr = taskArray.map((item) => {
+            if (item.id === taskId) {
+                return { ...item, done: true }
+            } else {
+                return item
+            }
+        })
+
+        const doneRef = doc(db, 'users', auth.currentUser.uid)
+        await updateDoc(doneRef, {
+            Tasks: {
+                OneOff: newArr,
+            },
+        })
+
+        await updateDoc(doneRef, {
+            Experience: increment(XP),
+        })
+
+        getTasks()
+    }
+
     return (
         <FlatList
             style={styles.flat}
             data={taskArray}
-            renderItem={({ item }) => (
-                <View style={styles.list}>
-                    <Text style={styles.listTitle}>
-                        {item.text}
-                        <MaterialCommunityIcons name="clipboard-check" size={30} color="#F0544F" />
-                    </Text>
-                    <Text style={styles.listText}>
-                        Date added: {new Date(item.dateAdded.seconds * 1000).toDateString()}{' '}
-                    </Text>
-                    <Text style={styles.listText}>
-                        Deadline: {new Date(item.deadline.seconds * 1000).toDateString()}{' '}
-                    </Text>
-                    <Text style={styles.listText}>
-                        Difficulty: {item.difficulty === 1 && 'Easy'}
-                        {item.difficulty === 2 && 'Medium'}
-                        {item.difficulty === 3 && 'Hard'}
-                    </Text>
-                    <Button>Done? Click here!</Button>
-                </View>
-            )}
+            renderItem={({ item }) =>
+                !item.done && (
+                    <View style={styles.list}>
+                        <Text style={styles.listTitle}>
+                            {item.text}
+                            <MaterialCommunityIcons name="clipboard-check" size={30} color="#F0544F" />
+                        </Text>
+                        <Text style={styles.listText}>
+                            Date added: {new Date(item.dateAdded.seconds * 1000).toDateString()}{' '}
+                        </Text>
+                        <Text style={styles.listText}>
+                            Deadline: {new Date(item.deadline.seconds * 1000).toDateString()}{' '}
+                        </Text>
+                        <Text style={styles.listText}>
+                            Difficulty: {item.difficulty === 1 && 'Easy'}
+                            {item.difficulty === 2 && 'Medium'}
+                            {item.difficulty === 3 && 'Hard'}
+                        </Text>
+                        <Button
+                            onPress={() => {
+                                onButtonPress(item.id, item.difficulty)
+                            }}
+                        >
+                            Done? Click here!
+                        </Button>
+                    </View>
+                )
+            }
         />
     )
 }

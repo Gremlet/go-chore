@@ -9,21 +9,17 @@ const Health = () => {
     const db = getFirestore()
     const auth = getAuth()
     const [health, setHealth] = useState(0)
+    const [progressBarValue, setProgressBarValue] = useState(0)
 
     useEffect(() => {
         getHealth()
-    })
+    }, [])
 
     const getHealth = async () => {
         const docRef = doc(db, 'users', auth.currentUser.uid)
         const docSnap = await getDoc(docRef)
 
-        if (docSnap.exists()) {
-            console.log('Document data:', docSnap.data())
-            setHealth(docSnap.data().Health)
-        } else {
-            console.log('No such document!')
-        }
+        setHealth(docSnap.data().Health)
     }
 
     return (

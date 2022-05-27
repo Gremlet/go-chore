@@ -17,13 +17,7 @@ const Experience = () => {
     const getXp = async () => {
         const docRef = doc(db, 'users', auth.currentUser.uid)
         const docSnap = await getDoc(docRef)
-
-        if (docSnap.exists()) {
-            console.log('Document data:', docSnap.data())
-            setXp(docSnap.data().Experience)
-        } else {
-            console.log('No such document!')
-        }
+        setXp(docSnap.data().Experience)
     }
 
     return (

@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Text } from 'react-native'
 import { View, StyleSheet, ScrollView } from 'react-native'
-import { FAB, Portal, Dialog, Button, TextInput, Paragraph, RadioButton, Checkbox } from 'react-native-paper'
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import { FAB, Portal, Dialog, Button, TextInput, Paragraph, RadioButton } from 'react-native-paper'
 import DateTimePickerModal from 'react-native-modal-datetime-picker'
 import { getFirestore, doc, arrayUnion, setDoc, getDoc, Timestamp } from 'firebase/firestore'
 import { getAuth } from 'firebase/auth'
@@ -27,7 +26,7 @@ const Tasks = () => {
 
     useEffect(() => {
         getTasks()
-    }, [taskArray])
+    }, [])
 
     const getTasks = async () => {
         const docRef = doc(db, 'users', auth.currentUser.uid)
@@ -47,6 +46,7 @@ const Tasks = () => {
         let newTaskObject = {
             id: Math.floor(Math.random() * 100000 + 1000),
             text: taskText,
+            // TODO: see if I can use just a normal date object -- seems timestamps result in too many reads?
             dateAdded: Timestamp.fromDate(new Date()),
             deadline: Timestamp.fromDate(date),
             difficulty: difficulty,
@@ -63,6 +63,8 @@ const Tasks = () => {
             },
             { merge: true }
         )
+
+        getTasks()
     }
 
     return (
@@ -97,7 +99,7 @@ const Tasks = () => {
                 onCancel={hideDatePicker}
             />
 
-            <TaskList taskArray={taskArray} />
+            <TaskList taskArray={taskArray} getTasks={getTasks} />
 
             <FAB style={styles.fab} small icon="plus" onPress={showDialog} />
         </View>

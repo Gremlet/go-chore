@@ -21,13 +21,7 @@ const Home = () => {
         const docRef = doc(db, 'users', auth.currentUser.uid)
         const docSnap = await getDoc(docRef)
 
-        if (docSnap.exists()) {
-            console.log('Document data:', docSnap.data())
-            setUsername(docSnap.data().username)
-        } else {
-            // doc.data() will be undefined in this case
-            console.log('No such document!')
-        }
+        setUsername(docSnap.data().username)
     }
 
     return (
