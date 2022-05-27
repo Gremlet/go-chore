@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { Text } from 'react-native'
-import { View, StyleSheet } from 'react-native'
-import { FAB, Portal, Dialog, Button, TextInput, Paragraph, RadioButton, Checkbox } from 'react-native-paper'
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import { View, StyleSheet, ScrollView } from 'react-native'
+import { FAB, Portal, Dialog, Button, TextInput, Paragraph, RadioButton } from 'react-native-paper'
 import DateTimePickerModal from 'react-native-modal-datetime-picker'
 import { getFirestore, doc, arrayUnion, setDoc, getDoc, Timestamp } from 'firebase/firestore'
 import { getAuth } from 'firebase/auth'
+import colors from '../styles/colours'
+import TaskList from '../components/TaskList'
 
 const Tasks = () => {
     const db = getFirestore()
@@ -26,7 +27,7 @@ const Tasks = () => {
 
     useEffect(() => {
         getTasks()
-    }, [taskArray])
+    }, [])
 
     const getTasks = async () => {
         const docRef = doc(db, 'users', auth.currentUser.uid)
@@ -62,12 +63,15 @@ const Tasks = () => {
             },
             { merge: true }
         )
+
+        getTasks()
     }
 
     return (
         <View style={styles.container}>
             <Text style={styles.text}>
-                Add some one-off tasks to gain XP here! Tap the icon on the bottom right to get started
+                Add some one-off tasks to gain XP here! Tap the icon on the bottom right to add a new task. Tap the
+                checkmark when you've completed a task.
             </Text>
             <Text style={styles.tasksHeader}>{auth.currentUser.displayName}'s one-off tasks</Text>
             <Portal>
@@ -96,26 +100,7 @@ const Tasks = () => {
                 onCancel={hideDatePicker}
             />
 
-            {taskArray.map((task) => (
-                <View style={styles.list}>
-                    <Text style={styles.listTitle}>
-                        {task.text}
-                        <MaterialCommunityIcons name="clipboard-check" size={30} color="#F0544F" />
-                    </Text>
-                    <Text style={styles.listText}>
-                        Date added: {new Date(task.dateAdded.seconds * 1000).toDateString()}{' '}
-                    </Text>
-                    <Text style={styles.listText}>
-                        Deadline: {new Date(task.deadline.seconds * 1000).toDateString()}{' '}
-                    </Text>
-                    <Text style={styles.listText}>
-                        Difficulty: {task.difficulty === 1 && 'Easy'}
-                        {task.difficulty === 2 && 'Medium'}
-                        {task.difficulty === 3 && 'Hard'}
-                    </Text>
-                    <Button>Done? Click here!</Button>
-                </View>
-            ))}
+            <TaskList taskArray={taskArray} getTasks={getTasks} />
 
             <FAB style={styles.fab} small icon="plus" onPress={showDialog} />
         </View>
@@ -126,20 +111,20 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
-        backgroundColor: '#6649B6',
+        backgroundColor: colors.purple,
     },
     text: {
-        fontSize: 20,
+        fontSize: 16,
         marginTop: 40,
         paddingHorizontal: 20,
-        fontFamily: 'PatrickHand_400Regular',
-        color: '#F4D35E',
+        fontFamily: 'Poppins_400Regular',
+        color: colors.yellow,
     },
     tasksHeader: {
-        marginTop: 20,
+        marginVertical: 20,
         fontSize: 30,
-        fontFamily: 'PatrickHand_400Regular',
-        color: '#F4D35E',
+        fontFamily: 'Poppins_400Regular',
+        color: colors.yellow,
     },
     fab: {
         position: 'absolute',
@@ -147,23 +132,6 @@ const styles = StyleSheet.create({
         right: 0,
         bottom: 0,
     },
-    list: {
-        flexShrink: 1,
-        width: '90%',
-        borderRadius: 10,
-        backgroundColor: '#16F4D0',
-        padding: 10,
-        marginVertical: 10,
-    },
-    listTitle: {
-        fontSize: 20,
-        fontFamily: 'PatrickHand_400Regular',
-    },
-    listText: {
-        fontFamily: 'PatrickHand_400Regular',
-        fontSize: 15,
-    },
-    check: {},
 })
 
 export default Tasks

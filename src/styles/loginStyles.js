@@ -1,10 +1,11 @@
 import { StyleSheet } from 'react-native'
+import colors from './colours'
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
-        backgroundColor: '#6649B6',
+        backgroundColor: colors.purple,
     },
     logo: {
         flex: 1,
@@ -26,7 +27,7 @@ const styles = StyleSheet.create({
         paddingLeft: 16,
     },
     button: {
-        backgroundColor: '#F4D35E',
+        backgroundColor: colors.yellow,
         marginLeft: 30,
         marginRight: 30,
         marginTop: 20,
@@ -36,10 +37,10 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     buttonTitle: {
-        color: '#6649B6',
+        color: colors.purple,
         fontSize: 16,
         fontWeight: 'bold',
-        fontFamily: 'PatrickHand_400Regular',
+        fontFamily: 'Poppins_400Regular',
     },
     footerView: {
         flex: 1,
@@ -49,19 +50,19 @@ const styles = StyleSheet.create({
     footerText: {
         fontSize: 16,
         color: '#ffffff',
-        fontFamily: 'PatrickHand_400Regular',
+        fontFamily: 'Poppins_400Regular',
     },
     footerLink: {
-        color: '#F4D35E',
+        color: colors.yellow,
         fontWeight: 'bold',
         fontSize: 16,
-        fontFamily: 'PatrickHand_400Regular',
+        fontFamily: 'Poppins_400Regular',
     },
     errorText: {
         fontSize: 20,
-        color: 'red',
+        color: colors.fuchsia,
         textAlign: 'center',
-        fontFamily: 'PatrickHand_400Regular',
+        fontFamily: 'Poppins_400Regular',
     },
 })
 

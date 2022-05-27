@@ -3,12 +3,11 @@ import { enableScreens } from 'react-native-screens'
 import Navigation from './src/navigation'
 import { Text } from 'react-native'
 import { Provider as PaperProvider } from 'react-native-paper'
-import { useFonts, PatrickHand_400Regular } from '@expo-google-fonts/patrick-hand'
-
-enableScreens()
+import { useFonts, Poppins_400Regular } from '@expo-google-fonts/poppins'
 
 export default function App() {
-    let [fontsLoaded] = useFonts({ PatrickHand_400Regular })
+    enableScreens()
+    let [fontsLoaded] = useFonts({ Poppins_400Regular })
 
     return !fontsLoaded ? (
         <Text>Loading...</Text>
