@@ -1,15 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { View, StyleSheet, Text, TouchableOpacity, Image } from 'react-native'
-import { getFirestore, doc, getDoc } from 'firebase/firestore'
-import { getAuth } from 'firebase/auth'
-
 import { ProgressBar } from 'react-native-paper'
+import colors from '../styles/colours'
 
 const Health = ({ health }) => {
     return (
         <View style={styles.container}>
             <Text style={styles.text}> ❤️ Health - {health}</Text>
-            <ProgressBar progress={health / 100} color={'#F4D35E'} style={styles.progressBar} />
+            <ProgressBar progress={health / 100} color={colors.orange} style={styles.progressBar} />
         </View>
     )
 }
@@ -22,7 +20,7 @@ const styles = StyleSheet.create({
     text: {
         padding: 5,
         fontFamily: 'Poppins_400Regular',
-        color: '#16F4D0',
+        color: colors.aqua,
     },
     progressBar: {},
 })

@@ -3,6 +3,7 @@ import { View, StyleSheet, Text, FlatList } from 'react-native'
 import { MaterialCommunityIcons } from 'react-native-vector-icons'
 import { Button, Dialog, Portal } from 'react-native-paper'
 import ConfettiCannon from 'react-native-confetti-cannon'
+import colors from '../styles/colours'
 import { getFirestore, doc, updateDoc, setDoc, getDoc, increment } from 'firebase/firestore'
 import { getAuth } from 'firebase/auth'
 
@@ -76,10 +77,13 @@ const TaskList = ({ taskArray, getTasks }) => {
                 renderItem={({ item }) =>
                     !item.done && (
                         <View style={styles.list}>
-                            <Text style={styles.listTitle}>
-                                {item.text}
-                                <MaterialCommunityIcons name="clipboard-check" size={30} color="#F0544F" />
-                            </Text>
+                            <View styles={styles.listHeader}>
+                                <Text style={styles.listTitle}>
+                                    {item.text}
+                                    {'  '} 📝
+                                </Text>
+                            </View>
+
                             <Text style={styles.listText}>
                                 Date added: {new Date(item.dateAdded.seconds * 1000).toDateString()}{' '}
                             </Text>
@@ -87,17 +91,20 @@ const TaskList = ({ taskArray, getTasks }) => {
                                 Deadline: {new Date(item.deadline.seconds * 1000).toDateString()}{' '}
                             </Text>
                             <Text style={styles.listText}>
-                                Difficulty: {item.difficulty === 1 && 'Easy'}
-                                {item.difficulty === 2 && 'Medium'}
-                                {item.difficulty === 3 && 'Hard'}
+                                Difficulty: {item.difficulty === 1 && 'Easy ⭐️'}
+                                {item.difficulty === 2 && 'Medium ⭐️⭐️'}
+                                {item.difficulty === 3 && 'Hard ⭐️⭐️⭐️'}
                             </Text>
                             <Button
                                 onPress={() => {
                                     onButtonPress(item.id, item.difficulty)
                                 }}
-                            >
-                                Done? Click here!
-                            </Button>
+                                icon="check-bold"
+                                color={colors.yellow}
+                                mode="contained"
+                                style={styles.listButton}
+                                labelStyle={{ fontFamily: 'Poppins_400Regular' }}
+                            />
                         </View>
                     )
                 }
@@ -125,10 +132,15 @@ const styles = StyleSheet.create({
     list: {
         flex: 1,
         borderRadius: 10,
-        backgroundColor: '#16F4D0',
+        backgroundColor: colors.aqua,
         padding: 10,
         marginVertical: 10,
+        shadowColor: '#171717',
+        shadowOffset: { width: -2, height: 4 },
+        shadowOpacity: 0.2,
+        shadowRadius: 3,
     },
+
     listTitle: {
         fontSize: 20,
         fontFamily: 'Poppins_400Regular',
@@ -137,8 +149,11 @@ const styles = StyleSheet.create({
         fontFamily: 'Poppins_400Regular',
         fontSize: 15,
     },
+    listButton: {
+        marginVertical: 10,
+    },
     dialog: {
-        backgroundColor: '#F4D35E',
+        backgroundColor: colors.yellow,
     },
     dialogTitle: {
         fontFamily: 'Poppins_400Regular',

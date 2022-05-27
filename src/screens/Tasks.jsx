@@ -5,6 +5,7 @@ import { FAB, Portal, Dialog, Button, TextInput, Paragraph, RadioButton } from '
 import DateTimePickerModal from 'react-native-modal-datetime-picker'
 import { getFirestore, doc, arrayUnion, setDoc, getDoc, Timestamp } from 'firebase/firestore'
 import { getAuth } from 'firebase/auth'
+import colors from '../styles/colours'
 import TaskList from '../components/TaskList'
 
 const Tasks = () => {
@@ -46,7 +47,6 @@ const Tasks = () => {
         let newTaskObject = {
             id: Math.floor(Math.random() * 100000 + 1000),
             text: taskText,
-            // TODO: see if I can use just a normal date object -- seems timestamps result in too many reads?
             dateAdded: Timestamp.fromDate(new Date()),
             deadline: Timestamp.fromDate(date),
             difficulty: difficulty,
@@ -70,7 +70,8 @@ const Tasks = () => {
     return (
         <View style={styles.container}>
             <Text style={styles.text}>
-                Add some one-off tasks to gain XP here! Tap the icon on the bottom right to get started
+                Add some one-off tasks to gain XP here! Tap the icon on the bottom right to add a new task. Tap the
+                checkmark when you've completed a task.
             </Text>
             <Text style={styles.tasksHeader}>{auth.currentUser.displayName}'s one-off tasks</Text>
             <Portal>
@@ -110,20 +111,20 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
-        backgroundColor: '#6649B6',
+        backgroundColor: colors.purple,
     },
     text: {
-        fontSize: 20,
+        fontSize: 16,
         marginTop: 40,
         paddingHorizontal: 20,
         fontFamily: 'Poppins_400Regular',
-        color: '#F4D35E',
+        color: colors.yellow,
     },
     tasksHeader: {
-        marginTop: 20,
+        marginVertical: 20,
         fontSize: 30,
         fontFamily: 'Poppins_400Regular',
-        color: '#F4D35E',
+        color: colors.yellow,
     },
     fab: {
         position: 'absolute',
