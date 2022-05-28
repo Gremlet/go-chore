@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { Text, TouchableOpacity, View, StyleSheet } from 'react-native'
+import { Text, View, StyleSheet } from 'react-native'
 import { getAuth } from 'firebase/auth'
-import { getFirestore, doc, getDoc } from 'firebase/firestore'
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import { getFirestore, doc, getDoc, updateDoc } from 'firebase/firestore'
 import { FAB } from 'react-native-paper'
 import colors from '../styles/colours'
 import Experience from '../components/Experience'
@@ -16,11 +15,14 @@ const Home = () => {
     const [username, setUsername] = useState('')
     const [xp, setXp] = useState(0)
     const [health, setHealth] = useState(0)
+    const [achievements, setAchievements] = useState({})
 
     useEffect(() => {
         getUsername()
         getXp()
         getHealth()
+        getAchievements()
+        checkAndUpdateAchievements()
     }, [])
 
     const getUsername = async () => {
@@ -47,9 +49,66 @@ const Home = () => {
     const refreshProgress = () => {
         getXp()
         getHealth()
+        getAchievements()
+        checkAndUpdateAchievements()
     }
 
-    const getAchievements = () => {}
+    const getAchievements = () => {
+        const achRef = doc(db, 'users', auth.currentUser.uid)
+        getDoc(achRef).then((docSnap) => {
+            setAchievements(docSnap.data().Achievements)
+        })
+    }
+
+    const checkAndUpdateAchievements = () => {
+        const achRef = doc(db, 'users', auth.currentUser.uid)
+
+        if (xp >= 100) {
+            updateDoc(achRef, {
+                'Achievements.Paper': true,
+            })
+        }
+        if (xp >= 200) {
+            updateDoc(achRef, {
+                'Achievements.Wood': true,
+            })
+        }
+        if (xp >= 300) {
+            updateDoc(achRef, {
+                'Achievements.Stone': true,
+            })
+        }
+        if (xp >= 400) {
+            updateDoc(achRef, {
+                'Achievements.Steel': true,
+            })
+        }
+        if (xp >= 500) {
+            updateDoc(achRef, {
+                'Achievements.Bronze': true,
+            })
+        }
+        if (xp >= 600) {
+            updateDoc(achRef, {
+                'Achievements.Silver': true,
+            })
+        }
+        if (xp >= 700) {
+            updateDoc(achRef, {
+                'Achievements.Gold': true,
+            })
+        }
+        if (xp >= 800) {
+            updateDoc(achRef, {
+                'Achievements.Platinum': true,
+            })
+        }
+        if (xp >= 900) {
+            updateDoc(achRef, {
+                'Achievements.Diamond': true,
+            })
+        }
+    }
 
     return (
         <View style={styles.container}>
@@ -58,8 +117,8 @@ const Home = () => {
             </View>
             <Experience xp={xp} />
             <Health health={health} />
-            <Achievements />
-            <FAB style={styles.refreshFab} small icon="refresh" onPress={refreshProgress} />
+            <Achievements achievements={achievements} />
+            <FAB style={styles.refreshFab} label="Tap for latest stats" icon="refresh" onPress={refreshProgress} />
             <FAB style={styles.signoutFab} small icon="logout" color={colors.orange} onPress={() => auth.signOut()} />
         </View>
     )
@@ -88,7 +147,7 @@ const styles = StyleSheet.create({
     refreshFab: {
         position: 'absolute',
         margin: 16,
-        right: 160,
+        right: 80,
         bottom: 0,
     },
 
