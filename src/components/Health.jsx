@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { View, StyleSheet, Text, TouchableOpacity, Image } from 'react-native'
 import { ProgressBar } from 'react-native-paper'
 import colors from '../styles/colours'
