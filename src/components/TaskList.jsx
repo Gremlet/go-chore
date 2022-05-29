@@ -13,9 +13,9 @@ const TaskList = ({ taskArray, getTasks }) => {
 
     const [visible, setVisible] = useState(false)
     const [currentHealth, setCurrentHealth] = useState(0)
+    const [confetti, setConfetti] = useState(false)
     const [XP, setXP] = useState(0)
     const [healthPoints, setHealthPoints] = useState(0)
-    const [confetti, setConfetti] = useState(false)
 
     useEffect(() => {
         const healthRef = doc(db, 'users', auth.currentUser.uid)
@@ -85,6 +85,38 @@ const TaskList = ({ taskArray, getTasks }) => {
         getTasks()
     }
 
+    // const checkDeadlines = () => {
+    //     const today = new Date()
+    //     today.setHours(0, 0, 0, 0)
+
+    //     const newArray = [...taskArray]
+    //     let points = 0
+    //     newArray.map((item) => {
+    //         if (item.deadline.toDate() < today && !item.done) {
+    //             console.log(item.id, item.text, 'deadline has passed')
+
+    //             item.missed = true
+    //             points += item.difficulty
+    //         } else {
+    //             console.log(item.id, item.text, 'deadline has not passed')
+    //         }
+    //     })
+    //     console.log(newArray)
+    //     setMinusHealthPoints(points)
+
+    //     // const missedRef = doc(db, 'users', auth.currentUser.uid)
+    //     // setDoc(
+    //     //     missedRef,
+    //     //     {
+    //     //         Tasks: {
+    //     //             OneOff: newArray,
+    //     //         },
+    //     //     },
+    //     //     { merge: true }
+    //     // )
+    //     getTasks()
+    // }
+
     return (
         <>
             <FlatList
@@ -92,25 +124,38 @@ const TaskList = ({ taskArray, getTasks }) => {
                 data={taskArray}
                 renderItem={({ item }) =>
                     !item.done && (
-                        <View style={styles.list}>
+                        <View style={item.missed ? styles.missedList : styles.list}>
                             <View styles={styles.listHeader}>
                                 <Text style={styles.listTitle}>
                                     {item.text}
                                     {'  '} 📝
                                 </Text>
                             </View>
+                            {item.missed ? (
+                                <View>
+                                    <Text style={styles.listText}>
+                                        Aw, shucks. Looks like you missed this one and lost {item.difficulty} health.
+                                    </Text>
+                                    <Text style={styles.listText}>
+                                        No, worries! Just delete it and add some more tasks and you'll be back on track!
+                                    </Text>
+                                </View>
+                            ) : (
+                                <View>
+                                    <Text style={styles.listText}>
+                                        Date added: {new Date(item.dateAdded.seconds * 1000).toDateString()}{' '}
+                                    </Text>
+                                    <Text style={styles.listText}>
+                                        Deadline: {new Date(item.deadline.seconds * 1000).toDateString()}{' '}
+                                    </Text>
+                                    <Text style={styles.listText}>
+                                        Difficulty: {item.difficulty === 1 && 'Easy ⭐️'}
+                                        {item.difficulty === 2 && 'Medium ⭐️⭐️'}
+                                        {item.difficulty === 3 && 'Hard ⭐️⭐️⭐️'}
+                                    </Text>
+                                </View>
+                            )}
 
-                            <Text style={styles.listText}>
-                                Date added: {new Date(item.dateAdded.seconds * 1000).toDateString()}{' '}
-                            </Text>
-                            <Text style={styles.listText}>
-                                Deadline: {new Date(item.deadline.seconds * 1000).toDateString()}{' '}
-                            </Text>
-                            <Text style={styles.listText}>
-                                Difficulty: {item.difficulty === 1 && 'Easy ⭐️'}
-                                {item.difficulty === 2 && 'Medium ⭐️⭐️'}
-                                {item.difficulty === 3 && 'Hard ⭐️⭐️⭐️'}
-                            </Text>
                             <Button
                                 onPress={() => {
                                     onButtonPress(item.id, item.difficulty)
@@ -120,10 +165,11 @@ const TaskList = ({ taskArray, getTasks }) => {
                                 mode="contained"
                                 style={styles.listButton}
                                 labelStyle={{ fontFamily: 'Poppins_400Regular' }}
+                                disabled={item.missed ? true : false}
                             />
                             <IconButton
                                 icon="window-close"
-                                color={colors.orange}
+                                color={colors.purple}
                                 size={20}
                                 onPress={() => {
                                     onDeletePress(item.id)
@@ -158,6 +204,17 @@ const styles = StyleSheet.create({
         flex: 1,
         borderRadius: 10,
         backgroundColor: colors.aqua,
+        padding: 10,
+        marginVertical: 10,
+        shadowColor: '#171717',
+        shadowOffset: { width: -2, height: 4 },
+        shadowOpacity: 0.2,
+        shadowRadius: 3,
+    },
+    missedList: {
+        flex: 1,
+        borderRadius: 10,
+        backgroundColor: colors.orange,
         padding: 10,
         marginVertical: 10,
         shadowColor: '#171717',
