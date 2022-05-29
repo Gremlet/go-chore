@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { View, StyleSheet, Text, FlatList } from 'react-native'
 import { MaterialCommunityIcons } from 'react-native-vector-icons'
-import { Button, Dialog, Portal } from 'react-native-paper'
+import { Button, Dialog, Portal, IconButton } from 'react-native-paper'
 import ConfettiCannon from 'react-native-confetti-cannon'
 import colors from '../styles/colours'
 import { getFirestore, doc, updateDoc, setDoc, getDoc, increment } from 'firebase/firestore'
@@ -69,6 +69,22 @@ const TaskList = ({ taskArray, getTasks }) => {
         getTasks()
     }
 
+    const onDeletePress = async (id) => {
+        const remainingTasks = taskArray.filter((item) => item.id !== id)
+
+        const deleteRef = doc(db, 'users', auth.currentUser.uid)
+        await setDoc(
+            deleteRef,
+            {
+                Tasks: {
+                    OneOff: remainingTasks,
+                },
+            },
+            { merge: true }
+        )
+        getTasks()
+    }
+
     return (
         <>
             <FlatList
@@ -104,6 +120,15 @@ const TaskList = ({ taskArray, getTasks }) => {
                                 mode="contained"
                                 style={styles.listButton}
                                 labelStyle={{ fontFamily: 'Poppins_400Regular' }}
+                            />
+                            <IconButton
+                                icon="window-close"
+                                color={colors.orange}
+                                size={20}
+                                onPress={() => {
+                                    onDeletePress(item.id)
+                                }}
+                                style={styles.deleteButton}
                             />
                         </View>
                     )
@@ -160,6 +185,11 @@ const styles = StyleSheet.create({
     },
     dialogText: {
         fontFamily: 'Poppins_400Regular',
+    },
+    deleteButton: {
+        position: 'absolute',
+        top: 0,
+        right: 0,
     },
 })
 
