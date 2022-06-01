@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Text } from 'react-native'
-import { View, StyleSheet, ScrollView } from 'react-native'
+import { View, StyleSheet, Text } from 'react-native'
 import { FAB, Portal, Dialog, Button, TextInput, Paragraph, RadioButton } from 'react-native-paper'
 import DateTimePickerModal from 'react-native-modal-datetime-picker'
 import { getFirestore, doc, arrayUnion, setDoc, getDoc, Timestamp, updateDoc, increment } from 'firebase/firestore'
@@ -18,7 +17,6 @@ const Tasks = () => {
     const [difficulty, setDifficulty] = useState(1)
     const [datePickerVisibility, setDatePickerVisibility] = useState(false)
     const [taskArray, setTaskArray] = useState([])
-    const [minusHealthPoints, setMinusHealthPoints] = useState(0)
 
     const showDialog = () => setVisible(true)
     const hideDialog = () => setVisible(false)
@@ -77,16 +75,12 @@ const Tasks = () => {
         let points = 0
         newArray.map((item) => {
             if (item.deadline.toDate() < today && !item.done) {
-                console.log(item.id, item.text, 'deadline has passed')
-
                 item.missed = true
                 points += -item.difficulty
             } else {
                 console.log(item.id, item.text, 'deadline has not passed')
             }
         })
-
-        console.log(points)
 
         const missedRef = doc(db, 'users', auth.currentUser.uid)
         setDoc(

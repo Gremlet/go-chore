@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react'
-import { View, StyleSheet, Text, FlatList } from 'react-native'
+import React from 'react'
+import { View, StyleSheet, Text } from 'react-native'
 import colors from '../styles/colours'
 
 const Achievements = ({ achievements }) => {

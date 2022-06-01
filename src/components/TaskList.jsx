@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { View, StyleSheet, Text, FlatList } from 'react-native'
-import { MaterialCommunityIcons } from 'react-native-vector-icons'
 import { Button, Dialog, Portal, IconButton } from 'react-native-paper'
 import ConfettiCannon from 'react-native-confetti-cannon'
 import colors from '../styles/colours'
@@ -84,38 +83,6 @@ const TaskList = ({ taskArray, getTasks }) => {
         )
         getTasks()
     }
-
-    // const checkDeadlines = () => {
-    //     const today = new Date()
-    //     today.setHours(0, 0, 0, 0)
-
-    //     const newArray = [...taskArray]
-    //     let points = 0
-    //     newArray.map((item) => {
-    //         if (item.deadline.toDate() < today && !item.done) {
-    //             console.log(item.id, item.text, 'deadline has passed')
-
-    //             item.missed = true
-    //             points += item.difficulty
-    //         } else {
-    //             console.log(item.id, item.text, 'deadline has not passed')
-    //         }
-    //     })
-    //     console.log(newArray)
-    //     setMinusHealthPoints(points)
-
-    //     // const missedRef = doc(db, 'users', auth.currentUser.uid)
-    //     // setDoc(
-    //     //     missedRef,
-    //     //     {
-    //     //         Tasks: {
-    //     //             OneOff: newArray,
-    //     //         },
-    //     //     },
-    //     //     { merge: true }
-    //     // )
-    //     getTasks()
-    // }
 
     return (
         <>
