@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { Text } from 'react-native'
-import { View, StyleSheet, ScrollView } from 'react-native'
+import { View, StyleSheet, Text } from 'react-native'
 import { FAB, Portal, Dialog, Button, TextInput, Paragraph, RadioButton } from 'react-native-paper'
 import DateTimePickerModal from 'react-native-modal-datetime-picker'
-import { getFirestore, doc, arrayUnion, setDoc, getDoc, Timestamp } from 'firebase/firestore'
+import { getFirestore, doc, arrayUnion, setDoc, getDoc, Timestamp, updateDoc, increment } from 'firebase/firestore'
 import { getAuth } from 'firebase/auth'
 import colors from '../styles/colours'
 import TaskList from '../components/TaskList'
@@ -51,6 +50,7 @@ const Tasks = () => {
             deadline: Timestamp.fromDate(date),
             difficulty: difficulty,
             done: false,
+            missed: false,
         }
 
         const docRef = doc(db, 'users', auth.currentUser.uid)
@@ -64,6 +64,37 @@ const Tasks = () => {
             { merge: true }
         )
 
+        getTasks()
+    }
+
+    const checkDeadlines = () => {
+        const today = new Date()
+        today.setHours(0, 0, 0, 0)
+
+        const newArray = [...taskArray]
+        let points = 0
+        newArray.map((item) => {
+            if (item.deadline.toDate() < today && !item.done) {
+                item.missed = true
+                points += -item.difficulty
+            } else {
+                console.log(item.id, item.text, 'deadline has not passed')
+            }
+        })
+
+        const missedRef = doc(db, 'users', auth.currentUser.uid)
+        setDoc(
+            missedRef,
+            {
+                Tasks: {
+                    OneOff: newArray,
+                },
+            },
+            { merge: true }
+        )
+        updateDoc(missedRef, {
+            Health: increment(points),
+        })
         getTasks()
     }
 
@@ -103,6 +134,7 @@ const Tasks = () => {
             <TaskList taskArray={taskArray} getTasks={getTasks} />
 
             <FAB style={styles.fab} small icon="plus" onPress={showDialog} />
+            <FAB style={styles.refreshFab} small icon="refresh" onPress={() => checkDeadlines()} />
         </View>
     )
 }
@@ -131,6 +163,14 @@ const styles = StyleSheet.create({
         margin: 16,
         right: 0,
         bottom: 0,
+        backgroundColor: colors.yellow,
+    },
+    refreshFab: {
+        position: 'absolute',
+        margin: 16,
+        left: 0,
+        bottom: 0,
+        backgroundColor: colors.yellow,
     },
 })
 

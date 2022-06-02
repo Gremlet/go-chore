@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { View, StyleSheet, Text, FlatList } from 'react-native'
-import { MaterialCommunityIcons } from 'react-native-vector-icons'
-import { Button, Dialog, Portal } from 'react-native-paper'
+import { Button, Dialog, Portal, IconButton } from 'react-native-paper'
 import ConfettiCannon from 'react-native-confetti-cannon'
 import colors from '../styles/colours'
 import { getFirestore, doc, updateDoc, setDoc, getDoc, increment } from 'firebase/firestore'
@@ -13,9 +12,9 @@ const TaskList = ({ taskArray, getTasks }) => {
 
     const [visible, setVisible] = useState(false)
     const [currentHealth, setCurrentHealth] = useState(0)
+    const [confetti, setConfetti] = useState(false)
     const [XP, setXP] = useState(0)
     const [healthPoints, setHealthPoints] = useState(0)
-    const [confetti, setConfetti] = useState(false)
 
     useEffect(() => {
         const healthRef = doc(db, 'users', auth.currentUser.uid)
@@ -69,6 +68,22 @@ const TaskList = ({ taskArray, getTasks }) => {
         getTasks()
     }
 
+    const onDeletePress = async (id) => {
+        const remainingTasks = taskArray.filter((item) => item.id !== id)
+
+        const deleteRef = doc(db, 'users', auth.currentUser.uid)
+        await setDoc(
+            deleteRef,
+            {
+                Tasks: {
+                    OneOff: remainingTasks,
+                },
+            },
+            { merge: true }
+        )
+        getTasks()
+    }
+
     return (
         <>
             <FlatList
@@ -76,25 +91,38 @@ const TaskList = ({ taskArray, getTasks }) => {
                 data={taskArray}
                 renderItem={({ item }) =>
                     !item.done && (
-                        <View style={styles.list}>
+                        <View style={item.missed ? styles.missedList : styles.list}>
                             <View styles={styles.listHeader}>
                                 <Text style={styles.listTitle}>
                                     {item.text}
                                     {'  '} 📝
                                 </Text>
                             </View>
+                            {item.missed ? (
+                                <View>
+                                    <Text style={styles.listText}>
+                                        Aw, shucks. Looks like you missed this one and lost {item.difficulty} health.
+                                    </Text>
+                                    <Text style={styles.listText}>
+                                        No, worries! Just delete it and add some more tasks and you'll be back on track!
+                                    </Text>
+                                </View>
+                            ) : (
+                                <View>
+                                    <Text style={styles.listText}>
+                                        Date added: {new Date(item.dateAdded.seconds * 1000).toDateString()}{' '}
+                                    </Text>
+                                    <Text style={styles.listText}>
+                                        Deadline: {new Date(item.deadline.seconds * 1000).toDateString()}{' '}
+                                    </Text>
+                                    <Text style={styles.listText}>
+                                        Difficulty: {item.difficulty === 1 && 'Easy ⭐️'}
+                                        {item.difficulty === 2 && 'Medium ⭐️⭐️'}
+                                        {item.difficulty === 3 && 'Hard ⭐️⭐️⭐️'}
+                                    </Text>
+                                </View>
+                            )}
 
-                            <Text style={styles.listText}>
-                                Date added: {new Date(item.dateAdded.seconds * 1000).toDateString()}{' '}
-                            </Text>
-                            <Text style={styles.listText}>
-                                Deadline: {new Date(item.deadline.seconds * 1000).toDateString()}{' '}
-                            </Text>
-                            <Text style={styles.listText}>
-                                Difficulty: {item.difficulty === 1 && 'Easy ⭐️'}
-                                {item.difficulty === 2 && 'Medium ⭐️⭐️'}
-                                {item.difficulty === 3 && 'Hard ⭐️⭐️⭐️'}
-                            </Text>
                             <Button
                                 onPress={() => {
                                     onButtonPress(item.id, item.difficulty)
@@ -104,6 +132,16 @@ const TaskList = ({ taskArray, getTasks }) => {
                                 mode="contained"
                                 style={styles.listButton}
                                 labelStyle={{ fontFamily: 'Poppins_400Regular' }}
+                                disabled={item.missed ? true : false}
+                            />
+                            <IconButton
+                                icon="window-close"
+                                color={colors.purple}
+                                size={20}
+                                onPress={() => {
+                                    onDeletePress(item.id)
+                                }}
+                                style={styles.deleteButton}
                             />
                         </View>
                     )
@@ -140,6 +178,17 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.2,
         shadowRadius: 3,
     },
+    missedList: {
+        flex: 1,
+        borderRadius: 10,
+        backgroundColor: colors.orange,
+        padding: 10,
+        marginVertical: 10,
+        shadowColor: '#171717',
+        shadowOffset: { width: -2, height: 4 },
+        shadowOpacity: 0.2,
+        shadowRadius: 3,
+    },
 
     listTitle: {
         fontSize: 20,
@@ -160,6 +209,11 @@ const styles = StyleSheet.create({
     },
     dialogText: {
         fontFamily: 'Poppins_400Regular',
+    },
+    deleteButton: {
+        position: 'absolute',
+        top: 0,
+        right: 0,
     },
 })
 
